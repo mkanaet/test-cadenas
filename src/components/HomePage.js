@@ -122,7 +122,7 @@ function HomePage() {
     return (
         <>
             {pageNumber.page.map((page, i) => {
-                <Link to={`/${pageNumber.id}`}>{<ProductListPage page={page} key={i}></ProductListPage>}</Link>
+                { return <ProductListPage page={page} key={i}></ProductListPage> }
             })}
 
             <div>
