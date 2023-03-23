@@ -1,24 +1,16 @@
-function SingleProductPage() {
-    return (
-        <div>
-            <h2>Details</h2>
-            <img></img>
-            <div>
-                <img></img>
-                <img></img>
-                <img></img>
-                <img></img>
-            </div>
-            <p>Description:</p>
-            <p>Brand:</p>
-            <p>Category:</p>
-            <p>Price:</p>
-            <p>Rating:</p>
-            <p>In stock:</p>
-            <br></br>
-            <button>Go back</button>
-        </div>
-    )
+import ProductDetails from "./ProductDetails";
+import { useLoaderData } from "react-router-dom";
 
+function SingleProductPage() {
+    const data = useLoaderData()
+    return (
+        <ProductDetails details={data}></ProductDetails>
+    )
 }
 export default SingleProductPage;
+
+export async function loader({ request, params }) {
+    const id = params.productId;
+    const response = await fetch(`https://dummyjson.com/products/${id}`);
+    return response;
+}

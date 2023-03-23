@@ -1,41 +1,83 @@
-import { useState, useEffect } from "react";
-import SingleProductPage from "./SingleProductPage";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import { useParams, useLoaderData } from "react-router-dom";
+import classes from "./ProductListPage.module.css"
 
-function ProductListPage(props) {
+
+function ProductListPage() {
     const params = useParams()
+    const products = useLoaderData();
+    const firstTen = products.slice(0, 10)
+    const secondTen = products.slice(10, 20)
+    const thirdTen = products.slice(20, 30)
 
-    const URL = `https://dummyjson.com/products/${props.page}`;
-    console.log(URL)
-    const [productList, setProductList] = useState({
-        "id": 0,
-        "title": "",
-        "description": "",
-        "price": 0,
-        "discountPercentage": 0,
-        "rating": 0,
-        "stock": 0,
-        "brand": "",
-        "category": "",
-        "thumbnail": "",
-        "images": ["", "", "", "", ""]
-    })
+    const [firstPage, setFirstPage] = useState(true)
+    const [secondPage, setSecondPage] = useState(false)
+    const [thirdPage, setThirdPage] = useState(false)
 
-    useEffect(() => {
-        fetch(URL)
-            .then((response) => response.json())
-            .then((data) => setProductList(data))
-    }, [URL])
+    const firstHandler = (event) => {
+        event.preventDefault();
+        setFirstPage(true)
+    }
 
-    console.log(productList)
+    const secondHandler = (event) => {
+        event.preventDefault();
+        setFirstPage(false)
+        setSecondPage(true)
+    }
+
+    const thirdHandler = (event) => {
+        event.preventDefault();
+        setFirstPage(false)
+        setSecondPage(false)
+        setThirdPage(true)
+    }
 
     return (
-        <div>
-            <h2>{productList.title}</h2>
-            <img src={productList.images[0]} alt="Slika"></img>
-            <div>{productList.description}</div>
-        </div>
+        <>
+            {firstPage && firstTen.map((prod) => {
+                return (
+                    <div className={classes.products} key={prod.id}>
+                        <NavLink className={classes.navlinkimg} to={`${prod.id}`}><img src={prod.thumbnail} alt="Slika"></img></NavLink>
+                        <div className={classes.about}>
+                            <NavLink className={classes.navlink} to={`${prod.id}`}><h2>{prod.title}</h2></NavLink>
+                            <div>{prod.description}</div>
+                        </div>
+                    </div>
+                )
+            })}
+            {!firstPage && secondPage && secondTen.map((prod) => {
+                return (
+                    <div className={classes.products} key={prod.id}>
+                        <NavLink className={classes.navlinkimg} to={`${prod.id}`}><img src={prod.thumbnail} alt="Slika"></img></NavLink>
+                        <div className={classes.about}>
+                            <NavLink className={classes.navlink} to={`${prod.id}`}><h2>{prod.title}</h2></NavLink>
+                            <div>{prod.description}</div>
+                        </div>
+                    </div>
+                )
+            })}
+            {!firstPage && !secondPage && thirdPage && thirdTen.map((prod) => {
+                return (
+                    <div className={classes.products} key={prod.id}>
+                        <NavLink className={classes.navlinkimg} to={`${prod.id}`}><img src={prod.thumbnail} alt="Slika"></img></NavLink>
+                        <div className={classes.about}>
+                            <NavLink className={classes.navlink} to={`${prod.id}`}><h2>{prod.title}</h2></NavLink>
+                            <div>{prod.description}</div>
+                        </div>
+                    </div>
+                )
+            })}
+
+            <div className={classes.link}>
+                <button className={classes.button} onClick={firstHandler}>1</button>
+                <button className={classes.button} onClick={secondHandler}>2</button>
+                <button className={classes.button} onClick={thirdHandler}>3</button>
+            </div>
+
+        </>
     );
 }
+
 
 export default ProductListPage;
